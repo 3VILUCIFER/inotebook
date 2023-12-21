@@ -13,12 +13,11 @@ const NoteState = (props) => {
         method: "GET", // *GET, POST, PUT, DELETE, etc.
         headers: {
           "Content-Type": "application/json",
-          "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjU2MWE2ODZhYjY0OGQyZTM0YzJkOTdhIn0sImlhdCI6MTcwMjk1MTgyNX0.C_hWWaCmfvSPMTfIbPp-IdZgBxMhwILDNJzXdTEQcS0"
+          "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjU3ZmY2N2YyYzliM2ZlODVlNTc2MGNlIn0sImlhdCI6MTcwMjg4NTE1M30.YDujL1u0i5ZASeqPs1RCCr4WYShd9cCEESeZ0jZFKVk"
         }
       });
-      const json = await response.json();
-      console.log(json)
-      setNotes(json);
+      const note = await response.json();
+      setNotes(note);
     }
 
 
@@ -33,20 +32,7 @@ const NoteState = (props) => {
         },
         body: JSON.stringify({title, description, tag}), 
       });
-      const json = await response.json(); 
-      console.log(json)
-
-        console.log("Adding a new note")
-        const note = {
-          "_id": "6566f049w354204aa53b887fb0",
-          "user": "6561a68d6ab648d2e34c2d97a",
-          "title": title,
-          "description": description,
-          "tag": tag,
-          "date": "2023-11-28T15:17:39.652Z",
-          "__v": 0
-        }
-
+      const note = await response.json(); 
         setNotes(notes.concat(note))
       }
 
@@ -57,11 +43,10 @@ const NoteState = (props) => {
         method: "DELETE", // *GET, POST, PUT, DELETE, etc.
         headers: {
           "Content-Type": "application/json",
-          "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjU2MWE2ODZhYjY0OGQyZTM0YzJkOTdhIn0sImlhdCI6MTcwMTA0NDg4N30.2a5-35dw39w-YudT3i_hXPKXyYpUz4u-Py5cmAqBCdI"
+          "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjU3ZmY2N2YyYzliM2ZlODVlNTc2MGNlIn0sImlhdCI6MTcwMjg4NTE1M30.YDujL1u0i5ZASeqPs1RCCr4WYShd9cCEESeZ0jZFKVk"
         }
       });
       const json = response.json();
-      console.log(json)
 
         console.log("deleting the note "+id)
         const newNotes = notes.filter((note)=>{return note._id!==id})
@@ -74,21 +59,24 @@ const NoteState = (props) => {
         method: "PUT", // *GET, POST, PUT, DELETE, etc.
         headers: {
           "Content-Type": "application/json",
-          "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+          "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjU3ZmY2N2YyYzliM2ZlODVlNTc2MGNlIn0sImlhdCI6MTcwMjg4NTE1M30.YDujL1u0i5ZASeqPs1RCCr4WYShd9cCEESeZ0jZFKVk"
         },
         body: JSON.stringify({title, description, tag}), 
       });
-      const json = response.json(); 
-      console.log(json)
+      const json = await response.json()
+
+      let newNotes =  JSON.parse(JSON.stringify(notes));
       // Logic to edit in  client 
-      for(let index=0; index=notes.length; index++){
-        const element = notes[index];
+      for(let index=0; index<newNotes.length; index++){
+        const element = newNotes[index];
         if(element._id === id){
-          element.title = title;
-          element.description = description;
-          element.tag = tag;
+          newNotes[index].title = title;
+          newNotes[index].description = description;
+          newNotes[index].tag = tag;
+          break;
         }
       }
+      setNotes(newNotes);   
     }
     return ( 
 <NoteContext.Provider value={{notes, setNotes, addNote, deleteNote, editNote, getNotes}}>
